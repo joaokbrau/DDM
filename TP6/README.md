@@ -3,7 +3,7 @@
 **Aluno(a):** João Victor Cabral de Souza
 **RA:** 274519
 **Disciplina:** Programação para Dispositivos Móveis
-**Professor(a):** Alessando Ferreira
+**Professor(a):** Alessandro Ferreira
 
 ## Sobre o projeto
 
@@ -16,11 +16,6 @@ usando persistência local com Room (SQLite).
 - Room 2.6.1 (SQLite)
 - ViewBinding
 - Corrotinas (lifecycleScope)
-
-## Prints do app
-
-![Tela inicial](docs/prints/tela-inicial.png)
-![Logcat com a listagem](docs/prints/logcat.png)
 
 ## Parte A: Complemento prático
 
@@ -43,8 +38,6 @@ lifecycleScope.launch {
 }
 ```
 
-Print: ![A1](docs/prints/a1.png)
-
 ### A2. Validação de preço
 
 **O que foi feito:** o texto do preço é convertido com `toDoubleOrNull()`. Se o resultado for `null` (campo vazio ou texto inválido) ou menor ou igual a zero, o app mostra o erro no próprio campo e interrompe o salvamento com `return@setOnClickListener`.
@@ -59,8 +52,6 @@ if (price == null || price <= 0.0) {
 }
 ```
 
-Print: ![A2](docs/prints/a2.png)
-
 ### A3. Lista na tela
 
 **O que foi feito:** foi adicionado um `TextView` (`textResultado`) abaixo dos botões. Ao clicar em Listar Produtos, a função `mostrarNaTela()` monta uma linha por produto (id, nome, preço, quantidade e descrição) e exibe o texto no `TextView`. O Logcat continua recebendo a listagem também. O layout está dentro de um `ScrollView` para que listas longas possam ser roladas.
@@ -74,8 +65,6 @@ val linhas = products.joinToString("\n") {
 }
 binding.textResultado.text = linhas
 ```
-
-Print: ![A3](docs/prints/a3.png)
 
 ### A4. Total do estoque
 
@@ -92,8 +81,6 @@ binding.textResultado.text = buildString {
     append("Soma dos preços: ${formatarPreco(total)}")
 }
 ```
-
-Print: ![A4](docs/prints/a4.png)
 
 ### A5. Buscar por nome
 
@@ -114,8 +101,6 @@ binding.btnBuscar.setOnClickListener {
     }
 }
 ```
-
-Print: ![A5](docs/prints/a5.png)
 
 ### A6. Excluir produtos
 
@@ -142,8 +127,6 @@ if (produto != null) {
 }
 ```
 
-Print: ![A6](docs/prints/a6.png)
-
 ### A7. Atualizar produto
 
 **O que foi feito:** o usuário informa o ID e o novo preço e clica em Atualizar Preço. O app busca o produto, cria uma cópia com o preço novo (`copy(price = novoPreco)`, já que `Product` é uma `data class` com `val`) e a grava com `@Update`. O novo preço passa pela mesma validação do A2.
@@ -163,8 +146,6 @@ if (produto != null) {
 }
 ```
 
-Print: ![A7](docs/prints/a7.png)
-
 ### A8. Novo campo na tabela (quantity)
 
 **O que foi feito:** foi adicionado `quantity: Int` à entidade `Product` (valor padrão 0), um campo "Quantidade em estoque" no layout e a leitura desse campo na inserção. No `@Database`, a `version` passou de 1 para 2.
@@ -180,8 +161,6 @@ Trecho de código:
 ```
 
 **O que aconteceu com os produtos já cadastrados e por quê:** eles foram apagados. Ao abrir o app com a versão 2, o Room percebeu que o banco do aparelho estava na versão 1 e que o esquema mudou (a tabela ganhou uma coluna). Como não existe uma `Migration` de 1 para 2 e o banco foi criado com `fallbackToDestructiveMigration()`, o Room apaga as tabelas antigas e cria tudo de novo no formato novo. Por isso a lista aparece vazia depois da atualização. Sem o `fallbackToDestructiveMigration()` e sem uma `Migration`, o app fecharia com uma exceção (`IllegalStateException: A migration from 1 to 2 was required but not found`).
-
-Print: ![A8](docs/prints/a8.png)
 
 ## Parte B: Questões dissertativas
 
